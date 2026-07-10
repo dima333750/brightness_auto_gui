@@ -2,7 +2,6 @@
 
 <p>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.6%2B-blue" alt="Python Version" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License" /></a>
 </p>
 
 <hr />
