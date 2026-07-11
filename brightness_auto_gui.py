@@ -414,7 +414,7 @@ class BrightnessApp:
             self.log_text.see(END)
 
     def show_tooltip(self, key):
-        tip_text = STRINGS.get('tooltip_' + key, '')
+        tip_text = STRINGS.get('tooltip_' + key.lower(), '')
         if not tip_text:
             tip_text = STRINGS.get('no_tooltip', 'No description for this parameter.')
         messagebox.showinfo(STRINGS.get('hint_title', 'Hint'), tip_text)
