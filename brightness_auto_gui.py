@@ -16,15 +16,28 @@ from PIL import Image, ImageDraw
 
 # ====== DEFAULT SETTINGS ======
 DEFAULT_CONFIG = {
-    'LAT': '56',
-    'LON': '44',
+    'LAT': '50',
+    'LON': '170',
     'MIN_BR': '1',
-    'MAX_BR': '70',
+    'MAX_BR': '99',
     'COEFF': '1.0',
     'DEBUG': 'True',
     'SLEEP_INTERVAL': '30',
-    'LANGUAGE': 'en',          # default language set to English
-    'START_TRAY': 'False'
+    'LANGUAGE': 'en',
+    'START_TRAY': 'False',
+    # Новые настройки (пункты 1–6)
+    'BATTERY_HIGH_THRESHOLD': '51',
+    'BATTERY_HIGH_REDUCTION': '10',
+    'BATTERY_LOW_THRESHOLD': '50',
+    'BATTERY_LOW_REDUCTION': '20',
+    'LOG_MAX_LINES': '1000',
+    'MUTEX_NAME': 'Global\\BrightnessAutoMutex',
+    'WINDOW_WIDTH': '750',
+    'WINDOW_HEIGHT': '650',
+    'MONITOR_INDEX': '1',
+    'EARTH_TILT': '23.44',
+    'DAY_OFFSET': '284',
+    'DAYS_IN_YEAR': '365',
 }
 CONFIG_FILE = 'config.ini'
 
@@ -83,7 +96,33 @@ def load_language(lang):
         'hint_title': 'Hint',
         'no_tooltip': 'No description for this parameter.',
         'charge_label': 'charge',
-        'copy_log': 'Copy log'
+        'copy_log': 'Copy log',
+        # Новые строки для расширенных настроек
+        'advanced': 'Advanced settings',
+        'battery_high_threshold': 'Battery high threshold (%)',
+        'battery_high_reduction': 'Reduction at high charge',
+        'battery_low_threshold': 'Battery low threshold (%)',
+        'battery_low_reduction': 'Reduction at low charge',
+        'log_max_lines': 'Max log lines',
+        'mutex_name': 'Mutex name (restart required)',
+        'window_width': 'Window width',
+        'window_height': 'Window height',
+        'monitor_index': 'Monitor index',
+        'earth_tilt': 'Earth axial tilt (deg)',
+        'day_offset': 'Day offset for declination',
+        'days_in_year': 'Days in year',
+        'tooltip_battery_high_threshold': 'If battery charge > this value, brightness is reduced by high reduction value.',
+        'tooltip_battery_high_reduction': 'Reduction amount when battery is highly charged.',
+        'tooltip_battery_low_threshold': 'If battery charge < this value, brightness is reduced by low reduction value.',
+        'tooltip_battery_low_reduction': 'Reduction amount when battery is low.',
+        'tooltip_log_max_lines': 'Maximum number of lines kept in the log.',
+        'tooltip_mutex_name': 'Name of the system mutex to prevent multiple instances. Change requires restart.',
+        'tooltip_window_width': 'Width of the main window in pixels.',
+        'tooltip_window_height': 'Height of the main window in pixels.',
+        'tooltip_monitor_index': 'Index of the monitor to adjust brightness (1-based).',
+        'tooltip_earth_tilt': 'Axial tilt of Earth in degrees (23.44).',
+        'tooltip_day_offset': 'Offset day for solar declination calculation (default 284).',
+        'tooltip_days_in_year': 'Number of days in a year (default 365).',
     }
     # Try to load language-specific file ab_<lang>.txt
     lang_file = f'ab_{lang}.txt'
@@ -118,7 +157,20 @@ def load_config():
         'DEBUG': config['Settings'].getboolean('DEBUG', DEFAULT_CONFIG['DEBUG'] == 'True'),
         'SLEEP_INTERVAL': int(config['Settings'].get('SLEEP_INTERVAL', DEFAULT_CONFIG['SLEEP_INTERVAL'])),
         'LANGUAGE': config['Settings'].get('LANGUAGE', DEFAULT_CONFIG['LANGUAGE']),
-        'START_TRAY': config['Settings'].getboolean('START_TRAY', DEFAULT_CONFIG['START_TRAY'] == 'True')
+        'START_TRAY': config['Settings'].getboolean('START_TRAY', DEFAULT_CONFIG['START_TRAY'] == 'True'),
+        # Новые настройки
+        'BATTERY_HIGH_THRESHOLD': int(config['Settings'].get('BATTERY_HIGH_THRESHOLD', DEFAULT_CONFIG['BATTERY_HIGH_THRESHOLD'])),
+        'BATTERY_HIGH_REDUCTION': int(config['Settings'].get('BATTERY_HIGH_REDUCTION', DEFAULT_CONFIG['BATTERY_HIGH_REDUCTION'])),
+        'BATTERY_LOW_THRESHOLD': int(config['Settings'].get('BATTERY_LOW_THRESHOLD', DEFAULT_CONFIG['BATTERY_LOW_THRESHOLD'])),
+        'BATTERY_LOW_REDUCTION': int(config['Settings'].get('BATTERY_LOW_REDUCTION', DEFAULT_CONFIG['BATTERY_LOW_REDUCTION'])),
+        'LOG_MAX_LINES': int(config['Settings'].get('LOG_MAX_LINES', DEFAULT_CONFIG['LOG_MAX_LINES'])),
+        'MUTEX_NAME': config['Settings'].get('MUTEX_NAME', DEFAULT_CONFIG['MUTEX_NAME']),
+        'WINDOW_WIDTH': int(config['Settings'].get('WINDOW_WIDTH', DEFAULT_CONFIG['WINDOW_WIDTH'])),
+        'WINDOW_HEIGHT': int(config['Settings'].get('WINDOW_HEIGHT', DEFAULT_CONFIG['WINDOW_HEIGHT'])),
+        'MONITOR_INDEX': int(config['Settings'].get('MONITOR_INDEX', DEFAULT_CONFIG['MONITOR_INDEX'])),
+        'EARTH_TILT': float(config['Settings'].get('EARTH_TILT', DEFAULT_CONFIG['EARTH_TILT'])),
+        'DAY_OFFSET': int(config['Settings'].get('DAY_OFFSET', DEFAULT_CONFIG['DAY_OFFSET'])),
+        'DAYS_IN_YEAR': int(config['Settings'].get('DAYS_IN_YEAR', DEFAULT_CONFIG['DAYS_IN_YEAR'])),
     }
     return cfg
 
@@ -133,7 +185,20 @@ def save_config(cfg):
         'DEBUG': str(cfg['DEBUG']),
         'SLEEP_INTERVAL': str(cfg['SLEEP_INTERVAL']),
         'LANGUAGE': cfg['LANGUAGE'],
-        'START_TRAY': str(cfg['START_TRAY'])
+        'START_TRAY': str(cfg['START_TRAY']),
+        # Новые настройки
+        'BATTERY_HIGH_THRESHOLD': str(cfg['BATTERY_HIGH_THRESHOLD']),
+        'BATTERY_HIGH_REDUCTION': str(cfg['BATTERY_HIGH_REDUCTION']),
+        'BATTERY_LOW_THRESHOLD': str(cfg['BATTERY_LOW_THRESHOLD']),
+        'BATTERY_LOW_REDUCTION': str(cfg['BATTERY_LOW_REDUCTION']),
+        'LOG_MAX_LINES': str(cfg['LOG_MAX_LINES']),
+        'MUTEX_NAME': cfg['MUTEX_NAME'],
+        'WINDOW_WIDTH': str(cfg['WINDOW_WIDTH']),
+        'WINDOW_HEIGHT': str(cfg['WINDOW_HEIGHT']),
+        'MONITOR_INDEX': str(cfg['MONITOR_INDEX']),
+        'EARTH_TILT': str(cfg['EARTH_TILT']),
+        'DAY_OFFSET': str(cfg['DAY_OFFSET']),
+        'DAYS_IN_YEAR': str(cfg['DAYS_IN_YEAR']),
     }
     with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
         config.write(f)
@@ -148,7 +213,20 @@ def reset_config():
         'DEBUG': DEFAULT_CONFIG['DEBUG'] == 'True',
         'SLEEP_INTERVAL': int(DEFAULT_CONFIG['SLEEP_INTERVAL']),
         'LANGUAGE': DEFAULT_CONFIG['LANGUAGE'],
-        'START_TRAY': DEFAULT_CONFIG['START_TRAY'] == 'True'
+        'START_TRAY': DEFAULT_CONFIG['START_TRAY'] == 'True',
+        # Новые настройки
+        'BATTERY_HIGH_THRESHOLD': int(DEFAULT_CONFIG['BATTERY_HIGH_THRESHOLD']),
+        'BATTERY_HIGH_REDUCTION': int(DEFAULT_CONFIG['BATTERY_HIGH_REDUCTION']),
+        'BATTERY_LOW_THRESHOLD': int(DEFAULT_CONFIG['BATTERY_LOW_THRESHOLD']),
+        'BATTERY_LOW_REDUCTION': int(DEFAULT_CONFIG['BATTERY_LOW_REDUCTION']),
+        'LOG_MAX_LINES': int(DEFAULT_CONFIG['LOG_MAX_LINES']),
+        'MUTEX_NAME': DEFAULT_CONFIG['MUTEX_NAME'],
+        'WINDOW_WIDTH': int(DEFAULT_CONFIG['WINDOW_WIDTH']),
+        'WINDOW_HEIGHT': int(DEFAULT_CONFIG['WINDOW_HEIGHT']),
+        'MONITOR_INDEX': int(DEFAULT_CONFIG['MONITOR_INDEX']),
+        'EARTH_TILT': float(DEFAULT_CONFIG['EARTH_TILT']),
+        'DAY_OFFSET': int(DEFAULT_CONFIG['DAY_OFFSET']),
+        'DAYS_IN_YEAR': int(DEFAULT_CONFIG['DAYS_IN_YEAR']),
     }
 
 # ====== MAIN APPLICATION ======
@@ -169,7 +247,8 @@ class BrightnessApp:
 
         self.root = Tk()
         self.root.title(STRINGS.get('title', 'Brightness Auto'))
-        self.root.geometry("750x600")
+        # Установка размера окна из конфига
+        self.root.geometry(f"{self.config['WINDOW_WIDTH']}x{self.config['WINDOW_HEIGHT']}")
         self.root.protocol("WM_DELETE_WINDOW", self.hide_window)
 
         self.build_gui()
@@ -268,6 +347,42 @@ class BrightnessApp:
             .pack(side=LEFT, padx=5)
         Button(btn_frame, text=STRINGS.get('reset', 'Reset to defaults'), command=self.reset_settings, width=15)\
             .pack(side=LEFT, padx=5)
+
+        # ---------- Advanced Settings Panel ----------
+        adv_frame = Frame(main_frame)
+        adv_frame.pack(fill=X, pady=5)
+
+        Label(adv_frame, text=STRINGS.get('advanced', 'Advanced settings'), font=("Arial", 10, "bold"))\
+            .grid(row=0, column=0, columnspan=8, sticky=W, pady=5)
+
+        adv_row = 1
+        adv_keys = [
+            ('battery_high_threshold', 'BATTERY_HIGH_THRESHOLD'),
+            ('battery_high_reduction', 'BATTERY_HIGH_REDUCTION'),
+            ('battery_low_threshold', 'BATTERY_LOW_THRESHOLD'),
+            ('battery_low_reduction', 'BATTERY_LOW_REDUCTION'),
+            ('log_max_lines', 'LOG_MAX_LINES'),
+            ('mutex_name', 'MUTEX_NAME'),
+            ('window_width', 'WINDOW_WIDTH'),
+            ('window_height', 'WINDOW_HEIGHT'),
+            ('monitor_index', 'MONITOR_INDEX'),
+            ('earth_tilt', 'EARTH_TILT'),
+            ('day_offset', 'DAY_OFFSET'),
+            ('days_in_year', 'DAYS_IN_YEAR'),
+        ]
+        # Размещаем в две колонки для компактности
+        for idx, (label_key, cfg_key) in enumerate(adv_keys):
+            col = 0 if idx < len(adv_keys)//2 else 4
+            row_off = idx if idx < len(adv_keys)//2 else idx - len(adv_keys)//2
+            # Используем grid с учетом колонок
+            Label(adv_frame, text=STRINGS.get(label_key, label_key)+":")\
+                .grid(row=adv_row+row_off, column=col, sticky=W, padx=5, pady=2)
+            ent = Entry(adv_frame, width=12)
+            ent.insert(0, str(self.config[cfg_key]))
+            ent.grid(row=adv_row+row_off, column=col+1, sticky=W, padx=5, pady=2)
+            self.entries[cfg_key] = ent
+            Button(adv_frame, text="?", width=2, command=lambda k=cfg_key: self.show_tooltip(k))\
+                .grid(row=adv_row+row_off, column=col+2, padx=2)
 
         # ---------- Log Panel ----------
         log_frame = Frame(main_frame)
@@ -374,16 +489,43 @@ class BrightnessApp:
                 'DEBUG': self.debug_var.get(),
                 'SLEEP_INTERVAL': int(self.interval_var.get()),
                 'LANGUAGE': new_lang,
-                'START_TRAY': self.tray_var.get()
+                'START_TRAY': self.tray_var.get(),
+                # Новые настройки
+                'BATTERY_HIGH_THRESHOLD': int(self.entries['BATTERY_HIGH_THRESHOLD'].get()),
+                'BATTERY_HIGH_REDUCTION': int(self.entries['BATTERY_HIGH_REDUCTION'].get()),
+                'BATTERY_LOW_THRESHOLD': int(self.entries['BATTERY_LOW_THRESHOLD'].get()),
+                'BATTERY_LOW_REDUCTION': int(self.entries['BATTERY_LOW_REDUCTION'].get()),
+                'LOG_MAX_LINES': int(self.entries['LOG_MAX_LINES'].get()),
+                'MUTEX_NAME': self.entries['MUTEX_NAME'].get().strip(),
+                'WINDOW_WIDTH': int(self.entries['WINDOW_WIDTH'].get()),
+                'WINDOW_HEIGHT': int(self.entries['WINDOW_HEIGHT'].get()),
+                'MONITOR_INDEX': int(self.entries['MONITOR_INDEX'].get()),
+                'EARTH_TILT': float(self.entries['EARTH_TILT'].get()),
+                'DAY_OFFSET': int(self.entries['DAY_OFFSET'].get()),
+                'DAYS_IN_YEAR': int(self.entries['DAYS_IN_YEAR'].get()),
             }
             if new_config['MIN_BR'] < 0 or new_config['MAX_BR'] > 100 or new_config['MIN_BR'] > new_config['MAX_BR']:
                 raise ValueError(STRINGS.get('error_min_max', 'MIN_BR must be >= 0 and <= MAX_BR, MAX_BR <= 100'))
             if new_config['SLEEP_INTERVAL'] < 1:
                 raise ValueError(STRINGS.get('error_interval', 'Interval must be >= 1 second'))
+            # Валидация дополнительных параметров
+            if new_config['BATTERY_HIGH_THRESHOLD'] < 0 or new_config['BATTERY_HIGH_THRESHOLD'] > 100:
+                raise ValueError("Battery high threshold must be between 0 and 100")
+            if new_config['BATTERY_LOW_THRESHOLD'] < 0 or new_config['BATTERY_LOW_THRESHOLD'] > 100:
+                raise ValueError("Battery low threshold must be between 0 and 100")
+            if new_config['BATTERY_HIGH_THRESHOLD'] <= new_config['BATTERY_LOW_THRESHOLD']:
+                raise ValueError("High threshold must be greater than low threshold")
+            if new_config['WINDOW_WIDTH'] < 200 or new_config['WINDOW_HEIGHT'] < 200:
+                raise ValueError("Window dimensions must be at least 200x200")
+            if new_config['MONITOR_INDEX'] < 1:
+                raise ValueError("Monitor index must be >= 1")
 
             old_lang = self.config['LANGUAGE']
             self.config = new_config
             save_config(self.config)
+
+            # Применяем размер окна сразу, если изменился
+            self.root.geometry(f"{self.config['WINDOW_WIDTH']}x{self.config['WINDOW_HEIGHT']}")
 
             if old_lang != self.config['LANGUAGE']:
                 load_language(self.config['LANGUAGE'])
@@ -414,6 +556,7 @@ class BrightnessApp:
         load_language(self.config['LANGUAGE'])
         self.build_gui()
         self.root.title(STRINGS.get('title', 'Brightness Auto'))
+        self.root.geometry(f"{self.config['WINDOW_WIDTH']}x{self.config['WINDOW_HEIGHT']}")
         if self.tray_icon:
             self.tray_icon.stop()
         self.setup_tray()
@@ -424,8 +567,10 @@ class BrightnessApp:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         full_msg = f"[{timestamp}] {msg}"
         self.log_lines.append(full_msg)
-        if len(self.log_lines) > 1000:
-            self.log_lines = self.log_lines[-1000:]
+        # Используем настройку максимального числа строк
+        max_lines = self.config.get('LOG_MAX_LINES', 1000)
+        if len(self.log_lines) > max_lines:
+            self.log_lines = self.log_lines[-max_lines:]
         if self.log_text:
             self.log_text.insert(END, full_msg + "\n")
             self.log_text.see(END)
@@ -448,15 +593,20 @@ class BrightnessApp:
                 brightness = self.compute_brightness_by_time(cfg)
                 orig = brightness
 
+                # Применяем коррекцию по батарее с использованием настроек
                 if status == 1 and charge is not None:
-                    if charge > 51:
-                        brightness -= 10
+                    high_thr = cfg.get('BATTERY_HIGH_THRESHOLD', 51)
+                    high_red = cfg.get('BATTERY_HIGH_REDUCTION', 10)
+                    low_thr = cfg.get('BATTERY_LOW_THRESHOLD', 50)
+                    low_red = cfg.get('BATTERY_LOW_REDUCTION', 20)
+                    if charge > high_thr:
+                        brightness -= high_red
                         if cfg['DEBUG']:
-                            self.log_message(STRINGS.get('high_charge', 'High charge (>51%) → -10'))
-                    elif charge < 50:
-                        brightness -= 20
+                            self.log_message(f"High charge (> {high_thr}%) → -{high_red}")
+                    elif charge < low_thr:
+                        brightness -= low_red
                         if cfg['DEBUG']:
-                            self.log_message(STRINGS.get('low_charge', 'Low charge (<50%) → -20'))
+                            self.log_message(f"Low charge (< {low_thr}%) → -{low_red}")
 
                 if brightness < 0:
                     brightness = 0
@@ -504,10 +654,11 @@ class BrightnessApp:
 
     def set_brightness(self, brightness):
         try:
+            monitor_idx = self.config.get('MONITOR_INDEX', 1)
             cmd = (
                 f'powershell -Command "'
                 f'(Get-WmiObject -Namespace root/WMI -Class WmiMonitorBrightnessMethods)'
-                f'.WmiSetBrightness(1,{brightness})"'
+                f'.WmiSetBrightness({monitor_idx},{brightness})"'
             )
             subprocess.run(cmd, shell=True, check=False)
         except Exception as e:
@@ -518,7 +669,11 @@ class BrightnessApp:
         doy = now.timetuple().tm_yday
         lat_rad = math.radians(cfg['LAT'])
 
-        dec_deg = 23.44 * math.sin(math.radians((284 + doy) * 360 / 365))
+        # Используем настройки для расчёта склонения
+        tilt = cfg.get('EARTH_TILT', 23.44)
+        day_off = cfg.get('DAY_OFFSET', 284)
+        days_yr = cfg.get('DAYS_IN_YEAR', 365)
+        dec_deg = tilt * math.sin(math.radians((day_off + doy) * 360 / days_yr))
         dec_rad = math.radians(dec_deg)
 
         cos_ha = -math.tan(lat_rad) * math.tan(dec_rad)
@@ -569,22 +724,23 @@ class BrightnessApp:
 
 # ====== ENTRY POINT ======
 if __name__ == "__main__":
+    # Загружаем конфиг до создания мьютекса, чтобы использовать имя из настроек
+    temp_config = load_config()  # временная загрузка для получения имени мьютекса
+    mutex_name = temp_config.get('MUTEX_NAME', 'Global\\BrightnessAutoMutex')
+
     # ----- Single instance check (Windows named mutex) with error message -----
     try:
         import ctypes
         kernel32 = ctypes.windll.kernel32
-        mutex = kernel32.CreateMutexA(None, False, b"Global\\BrightnessAutoMutex")
+        mutex = kernel32.CreateMutexA(None, False, mutex_name.encode('utf-8'))
         if kernel32.GetLastError() == 183:  # ERROR_ALREADY_EXISTS
             print("Another instance of Brightness Auto is already running.")
-            # Show a GUI message box to inform the user
             try:
-                # Create a temporary Tk root, hide it, show error, then destroy
                 root = Tk()
                 root.withdraw()
                 messagebox.showerror("Already Running", "Brightness Auto is already running.\nPlease close the existing instance.")
                 root.destroy()
             except Exception:
-                # If GUI fails, just print to console
                 pass
             sys.exit(0)
     except Exception:
