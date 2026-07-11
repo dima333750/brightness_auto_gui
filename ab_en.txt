@@ -1,3 +1,6 @@
+# English translation for Brightness Auto
+# UTF-8 encoding
+
 title=Brightness Auto
 settings=Settings
 log=Log
@@ -33,8 +36,8 @@ battery_status=Battery status
 charging=charging
 discharging=discharging
 no_battery=no battery
-high_charge=High charge (>51%) → -10
-low_charge=Low charge (<50%) → -20
+high_charge=High charge (> {0}%) → -{1}
+low_charge=Low charge (< {0}%) → -{1}
 night=Night – brightness minimal
 first_half=First half of day, progress {:.2f}
 second_half=Second half of day, progress {:.2f}
@@ -47,3 +50,29 @@ hint_title=Hint
 no_tooltip=No description for this parameter.
 charge_label=charge
 copy_log=Copy log
+advanced=Advanced settings
+battery_high_threshold=Battery high threshold (%)
+battery_high_reduction=Reduction at high charge
+battery_low_threshold=Battery low threshold (%)
+battery_low_reduction=Reduction at low charge
+log_max_lines=Max log lines
+mutex_name=Mutex name (restart required)
+window_width=Window width
+window_height=Window height
+monitor_index=Monitor index
+earth_tilt=Earth axial tilt (deg)
+day_offset=Day offset for declination
+days_in_year=Days in year
+
+tooltip_battery_high_threshold=If battery charge > this value, brightness is reduced by high reduction value.
+tooltip_battery_high_reduction=Reduction amount when battery is highly charged.
+tooltip_battery_low_threshold=If battery charge < this value, brightness is reduced by low reduction value.
+tooltip_battery_low_reduction=Reduction amount when battery is low.
+tooltip_log_max_lines=Maximum number of lines kept in the log.
+tooltip_mutex_name=Name of the system mutex to prevent multiple instances. Change requires restart.
+tooltip_window_width=Width of the main window in pixels.
+tooltip_window_height=Height of the main window in pixels.
+tooltip_monitor_index=Index of the monitor to adjust brightness (1-based).
+tooltip_earth_tilt=Axial tilt of Earth in degrees (23.44).
+tooltip_day_offset=Offset day for solar declination calculation (default 284).
+tooltip_days_in_year=Number of days in a year (default 365).
