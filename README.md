@@ -1,4 +1,4 @@
-<h1>Brightness Auto</h1>
+<h1>Brightness Auto GUI for Windows use geo coordinates</h1>
 
 <p>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.6%2B-blue" alt="Python Version" /></a>
