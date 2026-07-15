@@ -1,12 +1,12 @@
 <h1>Brightness Auto GUI for Windows use geo coordinates</h1>
-Example Latitude 40 Longitude 70, geo coordinates https://www.gps-coordinates.net/
+
 
 <p>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.6%2B-blue" alt="Python Version" /></a>
 </p>
 
 <hr />
-
+Example Latitude 40 Longitude 70, geo coordinates https://www.gps-coordinates.net/
 <h2>English</h2>
 
 <h3>Description</h3>
